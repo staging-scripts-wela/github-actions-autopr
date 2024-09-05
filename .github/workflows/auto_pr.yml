@@ -3,7 +3,7 @@ name: Auto Create Pull Request
 on:
   push:
     branches:
-      - '**' # Triggers the action on any branch push except default branch
+      - '**' 
 
 jobs:
   create_pull_request:
@@ -11,7 +11,7 @@ jobs:
 
     steps:
     - name: Checkout code
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     - name: Install GitHub CLI
       run: |
@@ -22,9 +22,10 @@ jobs:
         BRANCH_NAME=$(echo "${GITHUB_REF#refs/heads/}")
         MAIN="master"
         STAGING_BRANCH="staging"
+
         if [ "$BRANCH_NAME" != "$DEFAULT_BRANCH" ]; then
-          gh pr create --title "${{ github.ref_name }}" --body "${{ github.event.head_commit.message}}" --base "$MAIN_BRANCH" --head "$BRANCH_NAME"
           gh pr create --title "${{ github.ref_name }}" --body "${{ github.event.head_commit.message}}" --base "$STAGING_BRANCH" --head "$BRANCH_NAME"
+          gh pr create --title "${{ github.ref_name }}" --body "${{ github.event.head_commit.message}}" --base "$MAIN_BRANCH" --head "$BRANCH_NAME"
         else
           echo "Default branch, no PR needed"
         fi
