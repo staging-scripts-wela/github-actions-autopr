@@ -1,0 +1,32 @@
+name: Auto Create Pull Request
+
+on:
+  push:
+    branches:
+      - '**' # Triggers the action on any branch push except default branch
+
+jobs:
+  create_pull_request:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Install GitHub CLI
+      run: |
+        sudo apt-get install -y gh
+
+    - name: Create Pull Request
+      run: |
+        BRANCH_NAME=$(echo "${GITHUB_REF#refs/heads/}")
+        MAIN="master"
+        STAGING_BRANCH="staging"
+        if [ "$BRANCH_NAME" != "$DEFAULT_BRANCH" ]; then
+          gh pr create --title "${{ github.ref_name }}" --body "${{ github.event.head_commit.message}}" --base "$MAIN_BRANCH" --head "$BRANCH_NAME"
+          gh pr create --title "${{ github.ref_name }}" --body "${{ github.event.head_commit.message}}" --base "$STAGING_BRANCH" --head "$BRANCH_NAME"
+        else
+          echo "Default branch, no PR needed"
+        fi
+      env:
+        GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
