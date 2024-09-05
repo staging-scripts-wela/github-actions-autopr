@@ -18,7 +18,7 @@ jobs:
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v7
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.ACCESS_TOKEN }}
           # Specify the base branch you want to merge into (e.g., main)
           base: staging
           # Head branch is the new branch that was created
