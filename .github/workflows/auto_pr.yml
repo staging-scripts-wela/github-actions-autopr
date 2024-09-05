@@ -1,0 +1,34 @@
+name: Auto Create Pull Request
+
+# Trigger the workflow on branch creation
+on:
+  create:
+    ref_type: branch
+
+jobs:
+  create-pull-request:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Checkout the repository
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      # Step 2: Create a Pull Request using peter-evans/create-pull-request action
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v7
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          # Specify the base branch you want to merge into (e.g., main)
+          base: staging
+          # Head branch is the new branch that was created
+          head: ${{ github.ref_name }}
+          # PR title
+          title: "Auto PR: ${{ github.ref_name }}"
+          # PR description/body
+          body: |
+            This pull request was automatically created for the branch `${{ github.ref_name }}`.
+          # Optional: Labels to add to the PR
+          labels: automatic-pr
+          # Optional: Set PR as draft
+          draft: false
