@@ -21,7 +21,7 @@ jobs:
       run: |
         BRANCH_NAME=$(echo "${GITHUB_REF#refs/heads/}")
         MAIN="master"
-        STAGING_BRANCH
+        STAGING_BRANCH="staging"
         if [ "$BRANCH_NAME" != "$DEFAULT_BRANCH" ]; then
           gh pr create --title "${{ github.ref_name }}" --body "${{ github.event.head_commit.message}}" --base "$MAIN_BRANCH" --head "$BRANCH_NAME"
           gh pr create --title "${{ github.ref_name }}" --body "${{ github.event.head_commit.message}}" --base "$STAGING_BRANCH" --head "$BRANCH_NAME"
